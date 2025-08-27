@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.configuracion.AdministradorConexiones;
 import org.example.dao.AutoDAO;
+import org.example.dao.AutoImpl;
 import org.example.entities.Auto;
 import org.example.entities.Marca;
 
@@ -54,6 +55,14 @@ public class App
                 System.out.println(auto1.toString());
             }
         }
+
+        System.out.println("--------------  AGREGANDO CON DAO IMPL  ---------------");
+        Auto autoTest = new Auto(12,"CCCCCC","Blanco",2025,0,
+            Marca.Toyota,"Corolla");
+        AutoImpl autoImpl = new AutoImpl();
+        autoImpl.insert(autoTest);
+
+
 
 
 
