@@ -1,14 +1,14 @@
-package org.example.dao;
+package org.example.entities;
 
-public class SeguroDAO {
+public class Seguro {
   private int idSeguro;
   private String tipo;
   private double costoMensual;
   private String compania;
 
-  public SeguroDAO() {}
+  public Seguro() {}
 
-  public SeguroDAO(int idSeguro, String tipo, double costoMensual, String compania) {
+  public Seguro(int idSeguro, String tipo, double costoMensual, String compania) {
     this.idSeguro = idSeguro;
     this.tipo = tipo;
     this.costoMensual = costoMensual;

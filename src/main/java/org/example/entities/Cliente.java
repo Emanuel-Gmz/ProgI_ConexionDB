@@ -1,14 +1,14 @@
-package org.example.dao;
+package org.example.entities;
 
-public class ClienteDAO {
+public class Cliente {
   private int idCliente;
   private String nombre;
   private String apellido;
   private String telefono;
 
-  public ClienteDAO() {}
+  public Cliente() {}
 
-  public ClienteDAO(int idCliente, String nombre, String apellido, String telefono) {
+  public Cliente(int idCliente, String nombre, String apellido, String telefono) {
     this.idCliente = idCliente;
     this.nombre = nombre;
     this.apellido = apellido;
