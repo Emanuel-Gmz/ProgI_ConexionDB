@@ -1,5 +1,8 @@
 package org.example.entities;
 
+import org.example.dao.ClienteDAO;
+import org.example.dao.SeguroDAO;
+
 import java.util.Objects;
 
 public class Auto implements Comparable {
@@ -11,7 +14,35 @@ public class Auto implements Comparable {
 	private int kilometraje;
 	private Marca marca;
 	private String modelo;
-	
+  private ClienteDAO cliente;
+  private SeguroDAO seguro;
+
+
+  public Auto(int idAuto, Marca marca, String modelo, int anio, ClienteDAO cliente, SeguroDAO seguro) {
+      this.idAuto = idAuto;
+      this.marca = marca;
+      this.modelo = modelo;
+     this.anio = anio;
+     this.cliente = cliente;
+     this.seguro = seguro;
+  }
+
+
+  public ClienteDAO getCliente() {
+     return cliente;
+  }
+
+  public void setCliente(ClienteDAO cliente) {
+      this.cliente = cliente;
+  }
+
+  public SeguroDAO getSeguro() {
+      return seguro;
+  }
+
+  public void setSeguro(SeguroDAO seguro) {
+      this.seguro = seguro;
+  }
 	
 	
 	public Auto(){
