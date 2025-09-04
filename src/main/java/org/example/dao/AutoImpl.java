@@ -87,6 +87,7 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
     SeguroImpl seguroImpl=new SeguroImpl();
     boolean existeCliente=clienteImpl.existsById(auto.getCliente().getId());
     boolean existeSeguro=seguroImpl.existsById(auto.getSeguro().getIdSeguro());
+
     // solo guardo si existe el cliente y el seguro en la base de datos
     if( existeCliente && existeSeguro) {
 
@@ -140,6 +141,12 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
   public void update(Auto objeto) {
     conn=this.obtenerConexion();
     Auto auto= objeto;
+    ClienteImpl clienteDAO = new ClienteImpl();
+    SeguroImpl seguroDAO = new SeguroImpl();
+    boolean existeCliente = clienteDAO.existsById(objeto.getCliente().getId());
+    boolean existeSeguro = seguroDAO.existsById(objeto.getSeguro().getIdSeguro());
+    if (existeCliente && existeSeguro) {
+
     // solo si el auto existe lo modifico
     if (this.existsById(auto.getIdAuto())) {
 
@@ -152,12 +159,12 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
         pst = conn.prepareStatement(SQL_UPDATE);
 
         pst.setString(1, auto.getPatente());
-        pst.setString(2,auto.getColor());
-        pst.setInt(3,auto.getAnio());
-        pst.setInt(4,auto.getKilometraje());
-        pst.setString(5,auto.getMarca().toString());
-        pst.setString(6,auto.getModelo());
-        pst.setInt(7,auto.getIdAuto());
+        pst.setString(2, auto.getColor());
+        pst.setInt(3, auto.getAnio());
+        pst.setInt(4, auto.getKilometraje());
+        pst.setString(5, auto.getMarca().toString());
+        pst.setString(6, auto.getModelo());
+        pst.setInt(7, auto.getIdAuto());
 
         // paso 4 ejecutar instruccion
         // executeUpdate devuelve 1 si ejecuto correctamente 0 caso contrario
@@ -174,6 +181,7 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
       } catch (SQLException e) {
         System.out.println("Error al crear el statement");
       }
+    }
     }
 
   }
