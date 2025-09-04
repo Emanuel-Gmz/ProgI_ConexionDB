@@ -9,8 +9,9 @@ public class AdministradorConexiones {
 
         //4 datos de conexion
         String dbDriver= "com.mysql.cj.jdbc.Driver";
+
         //cadena conexion a mi BD
-        String dbCadenaConexion = "jdbc:mysql://127.0.0.1:3306/progAutos";
+        String dbCadenaConexion = "jdbc:mysql://127.0.0.1:3306/?user=root";
         //nom usuarioBD
         String dbUsuario ="root";
         //pass bd

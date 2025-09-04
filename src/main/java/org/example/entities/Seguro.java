@@ -1,21 +1,21 @@
 package org.example.entities;
 
-public class Seguro {
+import java.util.Objects;
+
+public class Seguro implements Comparable<Seguro> {
   private int idSeguro;
-  private String tipo;
   private double costoMensual;
-  private String compania;
+  private String tipo;
+  private String compañia;
 
   public Seguro() {}
 
-  public Seguro(int idSeguro, String tipo, double costoMensual, String compania) {
-    this.idSeguro = idSeguro;
+  public Seguro(String tipo, double costoMensual, String compañia) {
     this.tipo = tipo;
     this.costoMensual = costoMensual;
-    this.compania = compania;
+    this.compañia = compañia;
   }
 
-  // Getters y Setters
   public int getIdSeguro() {
     return idSeguro;
   }
@@ -40,12 +40,12 @@ public class Seguro {
     this.costoMensual = costoMensual;
   }
 
-  public String getCompania() {
-    return compania;
+  public String getCompañia() {
+    return compañia;
   }
 
-  public void setCompania(String compania) {
-    this.compania = compania;
+  public void setCompañia(String compañia) {
+    this.compañia = compañia;
   }
 
   @Override
@@ -54,7 +54,35 @@ public class Seguro {
         "idSeguro=" + idSeguro +
         ", tipo='" + tipo + '\'' +
         ", costoMensual=" + costoMensual +
-        ", compania='" + compania + '\'' +
+        ", compañia='" + compañia + '\'' +
         '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Seguro seguro = (Seguro) o;
+    return idSeguro == seguro.idSeguro &&
+        Objects.equals(tipo, seguro.tipo) &&
+        Objects.equals(costoMensual, seguro.costoMensual) &&
+        Objects.equals(compañia, seguro.compañia);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(idSeguro, tipo, costoMensual, compañia);
+  }
+
+  @Override
+  public int compareTo(Seguro otroSeguro) {
+    int resultadoValor = Double.compare(this.costoMensual, otroSeguro.costoMensual);
+    if (resultadoValor != 0) {
+      return resultadoValor;
+    }
+    int resultadoTipo = this.tipo.compareTo(otroSeguro.tipo);
+    if (resultadoTipo != 0) {
+      return resultadoTipo;
+    }
+    return this.compañia.compareTo(otroSeguro.compañia);
   }
 }

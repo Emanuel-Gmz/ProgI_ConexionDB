@@ -1,27 +1,30 @@
 package org.example.entities;
 
-public class Cliente {
-  private int idCliente;
+// Clase Cliente
+public class Cliente implements Comparable {
+  private int id;
   private String nombre;
   private String apellido;
   private String telefono;
 
-  public Cliente() {}
+  // Constructor
+  public Cliente() {
 
-  public Cliente(int idCliente, String nombre, String apellido, String telefono) {
-    this.idCliente = idCliente;
+  }
+  public Cliente(int id, String nombre, String apellido, String telefono) {
+    this.id = id;
     this.nombre = nombre;
     this.apellido = apellido;
     this.telefono = telefono;
   }
 
   // Getters y Setters
-  public int getIdCliente() {
-    return idCliente;
+  public int getId() {
+    return id;
   }
 
-  public void setIdCliente(int idCliente) {
-    this.idCliente = idCliente;
+  public void setId(int id) {
+    this.id = id;
   }
 
   public String getNombre() {
@@ -51,10 +54,22 @@ public class Cliente {
   @Override
   public String toString() {
     return "Cliente{" +
-        "idCliente=" + idCliente +
+        "id=" + id +
         ", nombre='" + nombre + '\'' +
         ", apellido='" + apellido + '\'' +
         ", telefono='" + telefono + '\'' +
         '}';
+  }
+
+  @Override
+  public int compareTo(Object o) {
+    Cliente otro= (Cliente) o;
+    int comparacionApellido = this.apellido.compareTo(otro.apellido);
+
+    if (comparacionApellido != 0) {
+      return comparacionApellido;
+    }
+
+    return this.nombre.compareTo(otro.nombre);
   }
 }

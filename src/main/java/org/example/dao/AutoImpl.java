@@ -13,13 +13,13 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
   private Connection conn= null;
 
   private static final String SQL_INSERT=
-      "INSERT INTO autos (patente,color,anio,kilometraje,marca,modelo) " +
-          "VALUES            (      ?,        ?,    ?,   ?,        ?,      ?)";
+      "INSERT INTO autos (patente,color,anio,kilometraje,marca,modelo,idCliente, idSeguro) " +
+          "VALUES            (      ?,        ?,    ?,   ?,        ?,      ?, ?,?)";
 
 
   private static  final String  SQL_UPDATE= "UPDATE autos SET " +
       "patente = ? , color = ? , anio = ? , kilometraje = ? " +
-      " , marca = ? , modelo = ? " +
+      " , marca = ? , modelo = ?" +
       "  WHERE idAuto = ? " ;
 
   private static  final String  SQL_DELETE= "DELETE FROM autos  WHERE idAuto = ? " ;
@@ -83,42 +83,57 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
     conn = obtenerConexion();
     // establecer conexion a la base de datos
 
-    // paso 3 crear instruccion
-    PreparedStatement pst = null;
-    try {
-      // con la conexion llamo al prepareStatement pasandole la consulta SQL
-      pst = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+    ClienteImpl clienteImpl=new ClienteImpl();
+    SeguroImpl seguroImpl=new SeguroImpl();
+    boolean existeCliente=clienteImpl.existsById(auto.getCliente().getId());
+    boolean existeSeguro=seguroImpl.existsById(auto.getSeguro().getIdSeguro());
+    // solo guardo si existe el cliente y el seguro en la base de datos
+    if( existeCliente && existeSeguro) {
 
-      pst.setString(1, auto.getPatente());
-      pst.setString(2,auto.getColor());
-      pst.setInt(3,auto.getAnio());
-      pst.setInt(4,auto.getKilometraje());
-      pst.setString(5,auto.getMarca().toString());
-      pst.setString(6,auto.getModelo());
+      // paso 3 crear instruccion
+      PreparedStatement pst = null;
 
-      // paso 4 ejecutar instruccion
-      // executeUpdate devuelve 1 si ejecuto correctamente 0 caso contrario
-      int resultado = pst.executeUpdate();
-      if (resultado == 1) {
-        System.out.println("Auto insertado correctamente");
-      } else {
-        System.out.println("No se pudo insertar el auto");
+      try {
+        // con la conexion llamo al prepareStatement pasandole la consulta SQL
+        pst = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+
+        pst.setString(1, auto.getPatente());
+        pst.setString(2, auto.getColor());
+        pst.setInt(3, auto.getAnio());
+        pst.setInt(4, auto.getKilometraje());
+        pst.setString(5, auto.getMarca().toString());
+        pst.setString(6, auto.getModelo());
+        pst.setInt(7, auto.getCliente().getId());
+        pst.setInt(8, auto.getSeguro().getIdSeguro());
+
+        // paso 4 ejecutar instruccion
+        // executeUpdate devuelve 1 si ejecuto correctamente 0 caso contrario
+        int resultado = pst.executeUpdate();
+        if (resultado == 1) {
+          System.out.println("Auto insertado correctamente");
+        } else {
+          System.out.println("No se pudo insertar el auto");
+        }
+
+        ResultSet rs = pst.getGeneratedKeys();
+        if (rs.next()) {
+          auto.setIdAuto(rs.getInt(1));
+          System.out.println("El id asignado es: " + auto.getIdAuto());
+        }
+
+        // paso 5 cerrar conexion
+        pst.close();
+        conn.close();
+
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
       }
 
-      ResultSet rs= pst.getGeneratedKeys();
-      if(rs.next())
-      { auto.setIdAuto(rs.getInt(1));
-        System.out.println( "El id asignado es: "+ auto.getIdAuto());
-      }
-
-      // paso 5 cerrar conexion
-      pst.close();
-      conn.close();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
     }
-
-
+    else {
+      System.out.println("No se puede insertar el auto. No existe el cliente con id: " + auto.getCliente().getId());
+      System.out.println("No se puede insertar el seguro. No existe el seguro con id: " + auto.getSeguro().getIdSeguro());
+    }
   }
 
   @Override
@@ -143,6 +158,7 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
         pst.setString(5,auto.getMarca().toString());
         pst.setString(6,auto.getModelo());
         pst.setInt(7,auto.getIdAuto());
+
         // paso 4 ejecutar instruccion
         // executeUpdate devuelve 1 si ejecuto correctamente 0 caso contrario
         int resultado = pst.executeUpdate();
@@ -190,7 +206,7 @@ public class AutoImpl implements DAO<Auto,Integer>, AdmConexion {
     PreparedStatement pst = null;
     ResultSet rs = null;
     boolean existe = false;
-    Auto auto=new Auto();
+    Auto auto=null;
 
     try {
       pst = conn.prepareStatement(SQL_GETBYID); // CREO STATEMENT
